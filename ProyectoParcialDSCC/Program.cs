@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Threading;
+
 using Microsoft.SPOT;
 using Microsoft.SPOT.Presentation;
 using Microsoft.SPOT.Presentation.Controls;
@@ -12,12 +13,15 @@ using Gadgeteer.Networking;
 using GT = Gadgeteer;
 using GTM = Gadgeteer.Modules;
 using Gadgeteer.Modules.GHIElectronics;
+using ZXing;
 
 namespace ProyectoParcialDSCC
 {
     public partial class Program
     {
         // This method is run when the mainboard is powered up or reset.   
+
+        IBarcodeReader reader = new BarcodeReader();
         void ProgramStarted()
         {
             /*******************************************************************************************
@@ -32,7 +36,7 @@ namespace ProyectoParcialDSCC
                 timer.Tick +=<tab><tab>
                 timer.Start();
             *******************************************************************************************/
-
+            var barcodeBitmap = new Bitmap(System.Drawing.Image.FromFile(fileName, true));
 
             // Use Debug.Print to show messages in Visual Studio's "Output" window during debugging.
             Debug.Print("Program Started");

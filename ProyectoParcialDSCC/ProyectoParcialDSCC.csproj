@@ -79,6 +79,12 @@
     <Reference Include="Microsoft.SPOT.TinyCore" />
     <Reference Include="mscorlib" />
     <Reference Include="System.IO" />
+    <Reference Include="zxing">
+      <HintPath>..\..\..\..\..\Downloads\ZXing.Net.0.14.0.0\net4.0\zxing.dll</HintPath>
+    </Reference>
+    <Reference Include="zxing.presentation">
+      <HintPath>..\..\..\..\..\Downloads\ZXing.Net.0.14.0.0\net4.0\zxing.presentation.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources.resx">
