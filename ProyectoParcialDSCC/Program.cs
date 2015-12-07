@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Threading;
-
 using Microsoft.SPOT;
 using Microsoft.SPOT.Presentation;
 using Microsoft.SPOT.Presentation.Controls;
@@ -13,6 +12,7 @@ using Gadgeteer.Networking;
 using GT = Gadgeteer;
 using GTM = Gadgeteer.Modules;
 using Gadgeteer.Modules.GHIElectronics;
+
 using ZXing;
 
 namespace ProyectoParcialDSCC
@@ -22,6 +22,7 @@ namespace ProyectoParcialDSCC
         // This method is run when the mainboard is powered up or reset.   
 
         IBarcodeReader reader = new BarcodeReader();
+        
         void ProgramStarted()
         {
             /*******************************************************************************************
@@ -36,10 +37,47 @@ namespace ProyectoParcialDSCC
                 timer.Tick +=<tab><tab>
                 timer.Start();
             *******************************************************************************************/
-            var barcodeBitmap = new Bitmap(System.Drawing.Image.FromFile(fileName, true));
 
             // Use Debug.Print to show messages in Visual Studio's "Output" window during debugging.
             Debug.Print("Program Started");
+            //Ethernet
+            this.ethernetJ11D.NetworkInterface.Open();
+            this.ethernetJ11D.NetworkInterface.EnableDhcp();
+            this.ethernetJ11D.UseThisNetworkInterface();
+
+
+        }
+
+        void button_ButtonPressed(Button sender, Button.ButtonState state)
+        {
+            String codigoEstudiante = "200832533";
+            String url = "https://ws.espol.edu.ec/saac/wsandroid.asmx/wsInfoEstudianteCarrera?codigoEstudiante=" + codigoEstudiante;
+            try
+            {
+                if (this.ethernetJ11D.IsNetworkConnected)
+                {
+                    Debug.Print("IsNetworkConnected");
+                    HttpRequest request = HttpHelper.CreateHttpGetRequest(url);
+                    request.ResponseReceived += request_ResponseReceived;
+                    request.SendRequest();
+                }
+                else
+                    Debug.Print("IsNotNetworkConnected");
+            }
+            catch (Exception ex)
+            {
+                Debug.Print(ex.Message);
+            }
+        }
+
+
+        void request_ResponseReceived(HttpRequest sender, HttpResponse response)
+        {
+            Debug.Print("request_ResponseReceived");
+
+            var x = response.Text;
+            Debug.Print(x);
+            
         }
     }
 }

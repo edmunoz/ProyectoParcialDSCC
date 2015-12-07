@@ -24,6 +24,12 @@ namespace ProyectoParcialDSCC {
         /// <summary>The Button module using socket 11 of the mainboard.</summary>
         private Gadgeteer.Modules.GHIElectronics.Button button;
         
+        /// <summary>The USB Client DP module using socket 1 of the mainboard.</summary>
+        private Gadgeteer.Modules.GHIElectronics.USBClientDP usbClientDP;
+        
+        /// <summary>The Ethernet J11D module using socket 7 of the mainboard.</summary>
+        private Gadgeteer.Modules.GHIElectronics.EthernetJ11D ethernetJ11D;
+        
         /// <summary>This property provides access to the Mainboard API. This is normally not necessary for an end user program.</summary>
         protected new static GHIElectronics.Gadgeteer.FEZSpider Mainboard {
             get {
@@ -49,6 +55,8 @@ namespace ProyectoParcialDSCC {
             this.displayT35 = new GTM.GHIElectronics.DisplayT35(14, 13, 12, 10);
             this.camera = new GTM.GHIElectronics.Camera(3);
             this.button = new GTM.GHIElectronics.Button(11);
+            this.usbClientDP = new GTM.GHIElectronics.USBClientDP(1);
+            this.ethernetJ11D = new GTM.GHIElectronics.EthernetJ11D(7);
         }
     }
 }
