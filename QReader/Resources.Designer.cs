@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ProyectoParcialDSCC
+namespace QReader
 {
 
     internal partial class Resources
@@ -20,7 +20,7 @@ namespace ProyectoParcialDSCC
             {
                 if ((Resources.manager == null))
                 {
-                    Resources.manager = new System.Resources.ResourceManager("ProyectoParcialDSCC.Resources", typeof(Resources).Assembly);
+                    Resources.manager = new System.Resources.ResourceManager("QReader.Resources", typeof(Resources).Assembly);
                 }
                 return Resources.manager;
             }
