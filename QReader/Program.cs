@@ -15,7 +15,7 @@ using Gadgeteer.Modules.GHIElectronics;
 
 namespace QReader
 {
-    enum State { Main, Camera, Webcam, Wifi, Calibrar };
+    enum State { Main, Camera, Webcam};
     public partial class Program
     {
         // This method is run when the mainboard is powered up or reset.
@@ -96,6 +96,24 @@ namespace QReader
                 default:
                     break;
             }
+        }
+        void GetQRContent(String ImageUrl) {
+            var urlQR = "http://api.qrserver.com/v1/read-qr-code/?fileurl="+ImageUrl;
+            HttpRequest request = HttpHelper.CreateHttpGetRequest(urlQR.ToString());
+            request.ResponseReceived += request_ResponseReceived;
+            request.SendRequest();
+            Debug.Print("Enviando request");
+        }
+
+        void request_ResponseReceived(HttpRequest sender, HttpResponse response)
+        {
+            //Aqui se
+            var resultado = response.Text;
+            Debug.Print(resultado);
+
+        }
+        void mostrarPantalla() { 
+        
         }
     }
 }
