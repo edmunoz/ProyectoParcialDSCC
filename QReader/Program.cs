@@ -11,12 +11,17 @@ using Microsoft.SPOT.Touch;
 using Gadgeteer.Networking;
 using GT = Gadgeteer;
 using GTM = Gadgeteer.Modules;
+using Gadgeteer.Modules.GHIElectronics;
 
 namespace QReader
 {
+    enum State { Main, Camera, Webcam, Wifi, Calibrar };
     public partial class Program
     {
-        // This method is run when the mainboard is powered up or reset.   
+        // This method is run when the mainboard is powered up or reset.
+        private bool isStreaming;
+        State systemState;
+        Bitmap currentBitmap;
         void ProgramStarted()
         {
             /*******************************************************************************************
@@ -35,6 +40,62 @@ namespace QReader
 
             // Use Debug.Print to show messages in Visual Studio's "Output" window during debugging.
             Debug.Print("Program Started");
+            isStreaming = false;
+            //Funciones de Camara
+            camera.BitmapStreamed += camera_BitmapStreamed;
+            camera.CameraConnected += camera_CameraConnected;
+            camera.PictureCaptured += camera_PictureCaptured;
+
+
+            //Conexion a Internet
+            this.ethernetJ11D.NetworkInterface.Open();
+            this.ethernetJ11D.NetworkInterface.EnableDhcp();
+            this.ethernetJ11D.UseThisNetworkInterface();
+            this.ethernetJ11D.NetworkDown += ethernetJ11D_NetworkDown;
+            this.ethernetJ11D.NetworkUp += ethernetJ11D_NetworkUp;
+
+            //imagen del qr
+            currentBitmap = new Bitmap(camera.CurrentPictureResolution.Width, camera.CurrentPictureResolution.Height);
+
+        }
+
+        void camera_PictureCaptured(Camera sender, GT.Picture e)
+        {
+            //enviar la foto por http
+        }
+
+        void camera_CameraConnected(Camera sender, EventArgs e)
+        {
+            Debug.Print("CameraConnected");
+            //camera.StartStreaming();
+        }
+
+        void ethernetJ11D_NetworkUp(GTM.Module.NetworkModule sender, GTM.Module.NetworkModule.NetworkState state)
+        {
+            Debug.Print("Conectado a Internet");
+        }
+
+        void ethernetJ11D_NetworkDown(GTM.Module.NetworkModule sender, GTM.Module.NetworkModule.NetworkState state)
+        {
+            Debug.Print("Desconectado a Internet");
+        }
+
+        void camera_BitmapStreamed(Camera sender, Bitmap e)
+        {
+            switch (systemState)
+            {
+                case State.Camera:
+                    if (isStreaming)
+                        displayT35.SimpleGraphics.DisplayImage(e, 0, 0);
+                    break;
+
+                case State.Webcam:
+                    camera.StopStreaming();
+                    break;
+
+                default:
+                    break;
+            }
         }
     }
 }
