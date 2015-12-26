@@ -15,7 +15,7 @@ using Gadgeteer.Modules.GHIElectronics;
 
 namespace QReader
 {
-    enum State { Main, Camera, Webcam};
+    enum State { Main, Camera, Webcam, Habilitado, Deshabilitado};
     public partial class Program
     {
         // This method is run when the mainboard is powered up or reset.
@@ -73,11 +73,13 @@ namespace QReader
         void ethernetJ11D_NetworkUp(GTM.Module.NetworkModule sender, GTM.Module.NetworkModule.NetworkState state)
         {
             Debug.Print("Conectado a Internet");
+            systemState = State.Habilitado;
         }
 
         void ethernetJ11D_NetworkDown(GTM.Module.NetworkModule sender, GTM.Module.NetworkModule.NetworkState state)
         {
             Debug.Print("Desconectado a Internet");
+            systemState = State.Deshabilitado;
         }
 
         void camera_BitmapStreamed(Camera sender, Bitmap e)
@@ -109,11 +111,30 @@ namespace QReader
         {
             //Aqui se
             var resultado = response.Text;
+            HttpRequest pedido = HttpHelper.CreateHttpGetRequest(GetUrlFromJson(resultado.ToString()));
+            pedido.ResponseReceived += pedido_ResponseReceived;
+            pedido.SendRequest();
             Debug.Print(resultado);
+            Debug.Print("Enviando Url de QR");
 
         }
+
+        void pedido_ResponseReceived(HttpRequest sender, HttpResponse response)
+        {
+            //Aqui el resutlado final del QR
+            var result = response.Text;
+            Debug.Print(result);
+        }
+
         void mostrarPantalla() { 
         
+        }
+        String GetUrlFromJson(String value) {
+            var texto = value;
+            String[] newtxt = texto.Split(':');
+            String[] data = newtxt.GetValue(4).ToString().Split(',');
+            var dataUrl = data.GetValue(0).ToString();
+            return dataUrl;
         }
     }
 }

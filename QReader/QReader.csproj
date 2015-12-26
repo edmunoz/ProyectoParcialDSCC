@@ -54,6 +54,12 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Gadgeteer" />
+    <Reference Include="Gadgeteer.Interfaces">
+      <HintPath>..\packages\Gadgeteer.Interfaces.Fakes.0.1.3\lib\netmf42\Gadgeteer.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Gadgeteer.Interfaces.Fakes">
+      <HintPath>..\packages\Gadgeteer.Interfaces.Fakes.0.1.3\lib\netmf42\Gadgeteer.Interfaces.Fakes.dll</HintPath>
+    </Reference>
     <Reference Include="Gadgeteer.SPI, Version=2.43.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
@@ -106,6 +112,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="Program.gadgeteer">
       <Generator>GadgeteerFileCodeGenerator</Generator>
       <LastGenOutput>Program.generated.cs</LastGenOutput>
