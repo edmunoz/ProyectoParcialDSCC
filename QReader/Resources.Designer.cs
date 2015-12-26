@@ -36,7 +36,9 @@ namespace QReader
         [System.SerializableAttribute()]
         internal enum StringResources : short
         {
-            WindowResult = -24,
+            CameraWindow = -25400,
+            MainWindow = 14107,
+            ResultWindow = 21262,
         }
         [System.SerializableAttribute()]
         internal enum FontResources : short

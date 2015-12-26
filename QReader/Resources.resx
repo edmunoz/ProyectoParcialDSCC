@@ -117,19 +117,39 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CameraWindow" xml:space="preserve">
+    <value>&lt;Glide Version="1.0.7"&gt;
+  &lt;Window Name="cameraWindow" Width="320" Height="240" BackColor="000000"&gt;
+    &lt;TextBlock Name="instance1719" X="50" Y="104" Width="220" Height="32" Alpha="255" Text="Activando camara ..." TextAlign="Center" TextVerticalAlign="Top" Font="6" FontColor="FFFFFF" BackColor="000000" ShowBackColor="False"/&gt;
+  &lt;/Window&gt;
+&lt;/Glide&gt;</value>
+  </data>
+  <data name="MainWindow" xml:space="preserve">
+    <value>&lt;Glide Version="1.0.7"&gt;
+  &lt;Window Name="instance115" Width="320" Height="240" BackColor="00E676"&gt;
+    &lt;TextBlock Name="TxtTitle1" X="63" Y="6" Width="200" Height="40" Alpha="255" Text="ESCUELA SUPERIOR POLITECNICA DEL LITORAL" TextAlign="Center" TextVerticalAlign="Top" Font="4" FontColor="0" BackColor="000000" ShowBackColor="False"/&gt;
+    &lt;TextBlock Name="TxtTitle2" X="52" Y="54" Width="230" Height="50" Alpha="255" Text="DISENO DE SISTEMAS CONTROLADOS POR COMPUTADOR" TextAlign="Center" TextVerticalAlign="Top" Font="4" FontColor="0" BackColor="000000" ShowBackColor="False"/&gt;
+    &lt;TextBlock Name="TxtTitle3" X="86" Y="103" Width="150" Height="32" Alpha="255" Text="INTEGRANTES" TextAlign="Center" TextVerticalAlign="Top" Font="4" FontColor="0" BackColor="000000" ShowBackColor="False"/&gt;
+    &lt;TextBlock Name="instance10252" X="85" Y="128" Width="150" Height="32" Alpha="255" Text="ESTEBAN MUNOZ" TextAlign="Center" TextVerticalAlign="Top" Font="4" FontColor="0" BackColor="000000" ShowBackColor="False"/&gt;
+    &lt;TextBlock Name="instance10508" X="62" Y="152" Width="200" Height="32" Alpha="255" Text="CHRISTIAN VERGARA" TextAlign="Center" TextVerticalAlign="Top" Font="4" FontColor="0" BackColor="000000" ShowBackColor="False"/&gt;
+    &lt;TextBlock Name="instance11948" X="17" Y="182" Width="284" Height="45" Alpha="255" Text="Lectura de codigo QR utilizando .NET MicroFramework Y Gatgeteer" TextAlign="Center" TextVerticalAlign="Top" Font="4" FontColor="0" BackColor="000000" ShowBackColor="False"/&gt;
+  &lt;/Window&gt;
+&lt;/Glide&gt;</value>
+  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="NinaB" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\NinaB.tinyfnt;System.Byte[], mscorlib, Culture=neutral, PublicKeyToken=null</value>
   </data>
-  <data name="small" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\small.tinyfnt;System.Byte[], mscorlib, Culture=neutral, PublicKeyToken=null</value>
-  </data>
-  <data name="WindowResult" xml:space="preserve">
+  <data name="ResultWindow" xml:space="preserve">
     <value>&lt;Glide Version="1.0.7"&gt;
-  &lt;Window Name="instance115" Width="320" Height="240" BackColor="FFFFFF"&gt;
-    &lt;TextBlock Name="TxtTitle" X="20" Y="6" Width="275" Height="32" Alpha="255" Text="Resultado Código QR" TextAlign="Center" TextVerticalAlign="Top" Font="4" FontColor="0" BackColor="000000" ShowBackColor="False"/&gt;
-    &lt;TextBlock Name="TxtResult" X="17" Y="56" Width="291" Height="32" Alpha="255" Text="TextBlockResult" TextAlign="Left" TextVerticalAlign="Top" Font="4" FontColor="0" BackColor="000000" ShowBackColor="False"/&gt;
+  &lt;Window Name="instance115" Width="320" Height="240" BackColor="00E676"&gt;
+    &lt;TextBlock Name="instance827" X="55" Y="13" Width="200" Height="32" Alpha="255" Text="Resultado codigo QR" TextAlign="Center" TextVerticalAlign="Top" Font="4" FontColor="0" BackColor="000000" ShowBackColor="False"/&gt;
+    &lt;Button Name="BtnLeer" X="114" Y="196" Width="80" Height="32" Alpha="255" Text="Leer" Font="4" FontColor="000000" DisabledFontColor="808080" TintColor="000000" TintAmount="0"/&gt;
+    &lt;TextBlock Name="TxtResult" X="7" Y="43" Width="310" Height="150" Alpha="255" Text="TextBlock" TextAlign="Left" TextVerticalAlign="Top" Font="4" FontColor="0" BackColor="000000" ShowBackColor="False"/&gt;
   &lt;/Window&gt;
 &lt;/Glide&gt;</value>
+  </data>
+  <data name="small" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\small.tinyfnt;System.Byte[], mscorlib, Culture=neutral, PublicKeyToken=null</value>
   </data>
 </root>
