@@ -33,7 +33,8 @@ namespace QReader
         private bool isStreaming;
         State systemState;
         Bitmap currentBitmap;
-        GT.Timer timer = new GT.Timer(5000,GT.Timer.BehaviorType.RunOnce); // every second (1000ms)
+        GT.Timer timer = new GT.Timer(5000, GT.Timer.BehaviorType.RunOnce); // every second (1000ms)
+        GT.Timer timerPictureCaptured; // every second (1000ms)
 
         void ProgramStarted()
         {
@@ -53,11 +54,13 @@ namespace QReader
 
             // Use Debug.Print to show messages in Visual Studio's "Output" window during debugging.
             Debug.Print("Program Started");
-            isStreaming = true;
 
             //Timer
             timer.Tick += timer_Tick;
             timer.Start();
+            timerPictureCaptured = new GT.Timer(9000);
+            timerPictureCaptured.Tick += timerPictureCaptured_Tick;
+            timerPictureCaptured.Start();
 
             //Load windows
             mainWindow = GlideLoader.LoadWindow(Resources.GetString(Resources.StringResources.MainWindow));
@@ -66,17 +69,11 @@ namespace QReader
             BtnLeer = (GHI.Glide.UI.Button)resultWindow.GetChildByName("BtnLeer");
             BtnLeer.TapEvent += BtnLeer_TapEvent;
             GlideTouch.Initialize();
-            //Selecciona mainWindow como la ventana de inicio
             Glide.MainWindow = mainWindow;
 
-            //Funciones de Camara
-            camera.BitmapStreamed += camera_BitmapStreamed;
-            camera.CameraConnected += camera_CameraConnected;
-            camera.PictureCaptured += camera_PictureCaptured;
-            systemState = State.Camera;
 
 
-            //button.ButtonPressed += button_ButtonPressed;
+            button.ButtonPressed += button_ButtonPressed;
 
             //Conexion a Internet
             this.ethernetJ11D.NetworkInterface.Open();
@@ -85,32 +82,41 @@ namespace QReader
             this.ethernetJ11D.NetworkDown += ethernetJ11D_NetworkDown;
             this.ethernetJ11D.NetworkUp += ethernetJ11D_NetworkUp;
 
+
+            //Funciones de Camara
+            camera.BitmapStreamed += camera_BitmapStreamed;
+            camera.CameraConnected += camera_CameraConnected;
+            camera.PictureCaptured += camera_PictureCaptured;
+            systemState = State.Camera;
+
             //imagen del qr
             currentBitmap = new Bitmap(camera.CurrentPictureResolution.Width, camera.CurrentPictureResolution.Height);
 
         }
 
-        void BtnLeer_TapEvent(object sender)
-        {
-            Glide.MainWindow = cameraWindow;
-            //camera.StartStreaming();
-            systemState = State.Camera;
-        }
-
         void timer_Tick(GT.Timer timer)
         {
             Glide.MainWindow = cameraWindow;
-            GetQRContent("http://autismoespol.tk/codigoQR/pruebaqr.png");
-            //camera.StartStreaming();
+            //GetQRContent("http://autismoespol.tk/codigoQR/pruebaqr.png");
+            camera.StartStreaming();
+            isStreaming = true;
             systemState = State.Camera;
+
         }
 
-        //void button_ButtonPressed(Button sender, Button.ButtonState state)
-        //{
-        //    camera.StopStreaming();
-        //    GetQRContent("http://autismoespol.tk/codigoQR/pruebaqr.png");
-        //    //camera.TakePicture();
-        //}
+        void timerPictureCaptured_Tick(GT.Timer timer)
+        {
+            timerPictureCaptured.Stop();
+            camera.StopStreaming();
+            camera.TakePicture();
+        }
+
+        void button_ButtonPressed(Gadgeteer.Modules.GHIElectronics.Button sender, Gadgeteer.Modules.GHIElectronics.Button.ButtonState state)
+        {
+            camera.StartStreaming();
+            systemState = State.Camera;
+            //camera.TakePicture();
+        }
 
         /// <summary>Sends bitmap to remote server using a POST request.</summary>
         private void sendBitmapToServer()
@@ -143,10 +149,9 @@ namespace QReader
 
         void camera_PictureCaptured(Camera sender, GT.Picture e)
         {
-            if (systemState == State.Habilitado) { 
-                //metodo para subir las imagenes
+            
+                sendBitmapToServer();//metodo para subir las imagenes
                 GetQRContent("http://autismoespol.tk/codigoQR/pruebaqr.png");
-            }
         }
 
         void camera_CameraConnected(Camera sender, EventArgs e)
@@ -183,6 +188,7 @@ namespace QReader
                     break;
             }
         }
+       
         void GetQRContent(String ImageUrl) {
             var urlQR = "http://api.qrserver.com/v1/read-qr-code/?fileurl="+ImageUrl;            
             HttpRequest request = HttpHelper.CreateHttpGetRequest(urlQR.ToString());
@@ -196,15 +202,43 @@ namespace QReader
             //Aqui se
             var resultado = response.Text;
             String r = GetUrlFromJson(resultado.ToString());
-            GHI.Glide.UI.TextBlock text = (GHI.Glide.UI.TextBlock)resultWindow.GetChildByName("TxtResult");
-            text.Text = r;
-            Glide.MainWindow = resultWindow;
-
+            if (r != String.Empty && r.Length > 2)
+            {
+                GHI.Glide.UI.TextBlock text = (GHI.Glide.UI.TextBlock)resultWindow.GetChildByName("TxtResult");
+                text.Text = r;
+                Glide.MainWindow = resultWindow;
+            }
+            else
+            {
+                timerPictureCaptured.Start();
+            }
             //HttpRequest pedido = HttpHelper.CreateHttpGetRequest(GetUrlFromJson(resultado.ToString()));
             //pedido.ResponseReceived += pedido_ResponseReceived;
             //pedido.SendRequest();
             //Debug.Print(resultado);
             //Debug.Print("Enviando Url de QR");
+
+        }
+
+        /// <summary>
+        /// Boton de la interface que nos permite
+        /// regresar al modo streaming
+        /// </summary>
+        /// <param name="sender"></param>
+        void BtnLeer_TapEvent(object sender)
+        {
+            try
+            {
+                Glide.MainWindow = cameraWindow;
+                systemState = State.Camera;
+                camera.StopStreaming();
+                camera.StartStreaming();
+                timerPictureCaptured.Start();
+            }
+            catch (Exception e)
+            {
+                Debug.Print(e.Message);
+            }
 
         }
 
