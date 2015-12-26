@@ -61,7 +61,9 @@ namespace QReader
 
         void camera_PictureCaptured(Camera sender, GT.Picture e)
         {
-            //enviar la foto por http
+            if (systemState == State.Habilitado) { 
+                //metodo para subir las imagenes
+            }
         }
 
         void camera_CameraConnected(Camera sender, EventArgs e)
