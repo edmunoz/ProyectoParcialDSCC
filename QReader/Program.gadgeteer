@@ -142,7 +142,7 @@
           <moduleHasSocketUses Id="cde5af11-d52a-45a4-a2b3-dbd2958b2818">
             <socketUse Id="83ada461-a846-4b04-bdb6-650aaf09f15a" label="H">
               <socket>
-                <socketUseReferencesSocket Id="16fe8751-5f2a-4891-a172-df6ee8281917">
+                <socketUseReferencesSocket Id="29810ad3-3a33-4a09-90e6-24c3fbe96752">
                   <socketMoniker Id="59f21636-0ea4-47dc-b073-bdb6fa152f2c" />
                 </socketUseReferencesSocket>
               </socket>
