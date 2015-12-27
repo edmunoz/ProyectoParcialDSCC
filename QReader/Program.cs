@@ -24,6 +24,9 @@ namespace QReader
     enum State { Main, Camera, Webcam, Habilitado, Deshabilitado};
     public partial class Program
     {
+        //Direccion donde se almacenara la imagen
+        const String SERVER_URL = "http://christianvergara.net16.net/";
+        const String SERVER_PORT = "80";
         // This method is run when the mainboard is powered up or reset.
         //Objetos de interface gráfica GLIDE
         private GHI.Glide.Display.Window resultWindow;
@@ -118,25 +121,7 @@ namespace QReader
             //camera.TakePicture();
         }
 
-        /// <summary>Sends bitmap to remote server using a POST request.</summary>
-        private void sendBitmapToServer()
-        {
-            //try
-            //{
-            //    POSTContent content = POSTContent.CreateBinaryBasedContent(currentBitmap.GetBitmap());
-            //    HttpRequest request = HttpHelper.CreateHttpPostRequest("http://" + SERVER_URL + ":" + SERVER_PORT + "/uploadImage", content, "multipart/form-data");
-
-            //    request.SendRequest();
-            //    request.ResponseReceived += request_ResponseReceived;
-
-            //    Debug.Print("Imagen enviada");
-            //}
-            //catch (System.ObjectDisposedException oe)
-            //{
-            //    Debug.Print("Error in sendBitmapToCloud(): " + oe.Message);
-            //}
-
-        }
+        /// <summary>Sends bitmap to remote server using a POST request.</summary
 
         /*
          * Se toma la foto
@@ -259,5 +244,25 @@ namespace QReader
             var dataUrl = data.GetValue(0).ToString();
             return dataUrl;
         }
+        //Metodo para subir los archivos a un servidor
+        private void sendBitmapToServer()
+        {
+            try
+            {
+                POSTContent content = POSTContent.CreateBinaryBasedContent(currentBitmap.GetBitmap());
+                HttpRequest request = HttpHelper.CreateHttpPostRequest("http://" + SERVER_URL + ":" + SERVER_PORT + "/", content, "multipart/form-data");
+
+                request.SendRequest();
+                request.ResponseReceived += request_ResponseReceived;
+
+                Debug.Print("Imagen enviada");
+            }
+            catch (System.ObjectDisposedException oe)
+            {
+                Debug.Print("Error in sendBitmapToCloud(): " + oe.Message);
+            }
+
+        }
+
     }
 }
