@@ -25,8 +25,10 @@ namespace QReader
     public partial class Program
     {
         //Direccion donde se almacenara la imagen
-        const String SERVER_URL = "http://christianvergara.net16.net/";
+        const String SERVER_URL = "http://christianvergara.net16.net";
         const String SERVER_PORT = "80";
+        const String ACTION = "upload.php?submit=true&action=upload";
+        private String PictureName = "";
         // This method is run when the mainboard is powered up or reset.
         //Objetos de interface gráfica GLIDE
         private GHI.Glide.Display.Window resultWindow;
@@ -175,7 +177,7 @@ namespace QReader
         }
        
         void GetQRContent(String ImageUrl) {
-            var urlQR = "http://api.qrserver.com/v1/read-qr-code/?fileurl="+ImageUrl;            
+            var urlQR = "http://api.qrserver.com/v1/read-qr-code/?fileurl="+GetUrlDeImagen(PictureName);            
             HttpRequest request = HttpHelper.CreateHttpGetRequest(urlQR.ToString());
             request.ResponseReceived += request_ResponseReceived;
             request.SendRequest();
@@ -248,9 +250,11 @@ namespace QReader
         private void sendBitmapToServer()
         {
             try
+
             {
+                
                 POSTContent content = POSTContent.CreateBinaryBasedContent(currentBitmap.GetBitmap());
-                HttpRequest request = HttpHelper.CreateHttpPostRequest("http://" + SERVER_URL + ":" + SERVER_PORT + "/", content, "multipart/form-data");
+                HttpRequest request = HttpHelper.CreateHttpPostRequest("http://" + SERVER_URL + ":" + SERVER_PORT + "/"+ ACTION + "", content, "multipart/form-data");
 
                 request.SendRequest();
                 request.ResponseReceived += request_ResponseReceived;
@@ -263,6 +267,11 @@ namespace QReader
             }
 
         }
+        private String GetUrlDeImagen(String ImagenNombre) {
+            return SERVER_URL+ "/uploads/" + ImagenNombre;          
+               
+        }
+        
 
     }
 }
