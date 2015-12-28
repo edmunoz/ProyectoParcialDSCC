@@ -82,10 +82,14 @@ namespace QReader
 
             //Conexion a Internet
             this.ethernetJ11D.NetworkInterface.Open();
+            //this.ethernetJ11D.NetworkInterface.EnableStaticIP("200.9.176.102", "255.255.255.128", "200.9.176.2");
+            
             this.ethernetJ11D.NetworkInterface.EnableDhcp();
+            //this.ethernetJ11D.UseStaticIP("200.9.176.102", "255.255.255.128","200.9.176.2");
             this.ethernetJ11D.UseThisNetworkInterface();
             this.ethernetJ11D.NetworkDown += ethernetJ11D_NetworkDown;
             this.ethernetJ11D.NetworkUp += ethernetJ11D_NetworkUp;
+            
 
 
             //Funciones de Camara
@@ -136,8 +140,11 @@ namespace QReader
 
         void camera_PictureCaptured(Camera sender, GT.Picture e)
         {
+
+            currentBitmap = new Bitmap(e.PictureData, Bitmap.BitmapImageType.Bmp);
             
-                sendBitmapToServer();//metodo para subir las imagenes
+            sendBitmapToServer(e);//metodo para subir las imagenes
+                
                 GetQRContent("http://autismoespol.tk/codigoQR/pruebaqr.png");
         }
 
@@ -184,27 +191,35 @@ namespace QReader
             Debug.Print("Enviando request");
         }
 
-        void request_ResponseReceived(HttpRequest sender, HttpResponse response)
+        void pedido_ResponseReceived(HttpRequest sender, HttpResponse response)
         {
-            //Aqui se
-            var resultado = response.Text;
-            String r = GetUrlFromJson(resultado.ToString());
-            if (r != String.Empty && r.Length > 2)
-            {
-                GHI.Glide.UI.TextBlock text = (GHI.Glide.UI.TextBlock)resultWindow.GetChildByName("TxtResult");
-                text.Text = r;
-                Glide.MainWindow = resultWindow;
-            }
-            else
-            {
-                timerPictureCaptured.Start();
-            }
-            //HttpRequest pedido = HttpHelper.CreateHttpGetRequest(GetUrlFromJson(resultado.ToString()));
-            //pedido.ResponseReceived += pedido_ResponseReceived;
-            //pedido.SendRequest();
-            //Debug.Print(resultado);
-            //Debug.Print("Enviando Url de QR");
+            //if (response.StatusCode == "202")         {
+               
+                var resultado = response.Text;
+                
+                Debug.Print(resultado);
 
+
+            /*
+                String r = GetUrlFromJson(resultado.ToString());
+                if (r != String.Empty && r.Length > 2 && r != "null")
+                {
+                    GHI.Glide.UI.TextBlock text = (GHI.Glide.UI.TextBlock)resultWindow.GetChildByName("TxtResult");
+                    text.Text = r;
+                    Glide.MainWindow = resultWindow;
+                }
+                else
+                {
+                    timerPictureCaptured.Start();
+                }
+
+            */
+                //HttpRequest pedido = HttpHelper.CreateHttpGetRequest(GetUrlFromJson(resultado.ToString()));
+                //pedido.ResponseReceived += pedido_ResponseReceived;
+                //pedido.SendRequest();
+                //Debug.Print(resultado);
+                //Debug.Print("Enviando Url de QR");
+            //}
         }
 
         /// <summary>
@@ -229,12 +244,12 @@ namespace QReader
 
         }
 
-        void pedido_ResponseReceived(HttpRequest sender, HttpResponse response)
+        /*void pedido_ResponseReceived(HttpRequest sender, HttpResponse response)
         {
             //Aqui el resutlado final del QR
             var result = response.Text;
             Debug.Print(result);
-        }
+        }*/
 
         void mostrarPantalla() {
         
@@ -247,23 +262,27 @@ namespace QReader
             return dataUrl;
         }
         //Metodo para subir los archivos a un servidor
-        private void sendBitmapToServer()
+        private void sendBitmapToServer(GT.Picture picture)
         {
-            try
-
+            if (ethernetJ11D.IsNetworkUp)
             {
-                
-                POSTContent content = POSTContent.CreateBinaryBasedContent(currentBitmap.GetBitmap());
-                HttpRequest request = HttpHelper.CreateHttpPostRequest("http://" + SERVER_URL + ":" + SERVER_PORT + "/"+ ACTION + "", content, "multipart/form-data");
+                try
+                {
 
-                request.SendRequest();
-                request.ResponseReceived += request_ResponseReceived;
+                    //POSTContent content = POSTContent.CreateBinaryBasedContent(currentBitmap.GetBitmap());
+                    POSTContent fileToUpload = POSTContent.CreateBinaryBasedContent(picture.PictureData);
+                    HttpRequest pedido = HttpHelper.CreateHttpPostRequest("http://christianvergara.net16.net/upload.php?submit=true&action=upload", fileToUpload, "multipart/form-data");
+                                       
 
-                Debug.Print("Imagen enviada");
-            }
-            catch (System.ObjectDisposedException oe)
-            {
-                Debug.Print("Error in sendBitmapToCloud(): " + oe.Message);
+                    pedido.SendRequest();
+                    pedido.ResponseReceived +=pedido_ResponseReceived;
+
+                    Debug.Print("Imagen enviada");
+                }
+                catch (System.ObjectDisposedException oe)
+                {
+                    Debug.Print("Error in sendBitmapToCloud(): " + oe.Message);
+                }
             }
 
         }
